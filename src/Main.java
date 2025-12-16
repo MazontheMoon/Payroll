@@ -1,4 +1,6 @@
-
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -14,6 +16,7 @@ public class Main {
     static double taxPaid;
     static double netPay;
     static double bonusPay;
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -21,9 +24,41 @@ public class Main {
         displayGreeting();
 
         //Get user input
-        Scanner scanner = new Scanner(System.in);
+        getEmployeePayrollInfo();
 
-        //Get employee ID
+        //Calculate pay information
+        calculatePay();
+
+        //Display payslip on screen
+        displayPayOnScreen();
+
+        //Create payslip file
+        createPayslip();
+    }
+
+    public static void displayGreeting(){
+        System.out.println("===============================");
+        System.out.println("Welcome to the Payroll System");
+        System.out.println("===============================");
+    }
+
+    /*=============
+    GET USER INPUT
+    ===============*/
+
+    public static void getEmployeePayrollInfo() {
+        getEmployeeID();
+        getFirstName();
+        getLastName();
+        getHoursWorked();
+        getPayRate();
+        getTaxRate();
+
+        //Closures
+        scanner.close();
+    }
+
+    public static void getEmployeeID() {
         while(true){
             try{
                 System.out.print("Enter employee ID: ");
@@ -33,8 +68,9 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
 
-        //Get employee first name
+    public static void getFirstName() {
         while(true){
             try{
                 System.out.print("Enter first name: ");
@@ -44,8 +80,9 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
 
-        //Get employee last name
+    public static void getLastName() {
         while(true){
             try{
                 System.out.print("Enter last name: ");
@@ -55,8 +92,9 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
 
-        //Get hours worked
+    public static void getHoursWorked(){
         while(true){
             try{
                 System.out.print("Enter number of hours worked: ");
@@ -66,8 +104,9 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
 
-        //Get pay rate
+    public static void getPayRate() {
         while(true){
             try{
                 System.out.print("Enter rate of pay: $");
@@ -77,8 +116,9 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
 
-        //Get tax rate
+    public static void getTaxRate(){
         while(true){
             try{
                 System.out.print("Enter rate of tax \n (0.1 = 10%, 0.2 = 20%, etc.): ");
@@ -88,31 +128,10 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-
-        //Calculate pay information
-        grossPay = calculateGross(hoursWorked, payRate);
-        taxPaid = calculateTax(grossPay, taxRate);
-        netPay = calculateNet(grossPay, taxPaid);
-        bonusPay = calculateBonus(hoursWorked);
-
-        //Display payslip on screen
-        displayPayOnScreen();
-
-        //Create payslip file
-
-        //Closures
-        scanner.close();
     }
-
-    public static void displayGreeting(){
-        System.out.println("===============================");
-        System.out.println("Welcome to the Payroll System");
-        System.out.println("===============================");
-    }
-
-    /*===================
-    VALIDATE INPUT FIELDS
-    =====================*/
+    /*=============
+    VALIDATE INPUT
+    ==============*/
 
    public static String validateEmployeeID(String input){
         //Check for blank input
@@ -172,6 +191,17 @@ public class Main {
         return tax;
     }
 
+    /*===================
+    PAYROLL CALCULATIONS
+    =====================*/
+
+    public static void calculatePay(){
+        grossPay = calculateGross(hoursWorked, payRate);
+        taxPaid = calculateTax(grossPay, taxRate);
+        netPay = calculateNet(grossPay, taxPaid);
+        bonusPay = calculateBonus(hoursWorked);
+    }
+
     public static double calculateGross(int hours, double pay){
        return hours * pay;
     }
@@ -205,8 +235,11 @@ public class Main {
         return bonus;
     }
 
-    public static void displayPayOnScreen(){
+    /*================
+    DISPLAY ON SCREEN
+    ===================*/
 
+    public static void displayPayOnScreen(){
        System.out.println("===============================");
        System.out.println("Employee Payslip");
        System.out.println("===============================");
@@ -229,4 +262,26 @@ public class Main {
     public static String getTaxPercentage(double rate){
         return String.format("%.0f%%", rate * 100);
     }
+
+    /*==================
+    CREATE PAYSLIP FILE
+    ===================*/
+
+    public static void createPayslip(){
+        String filePath = "C:\\temp\\payroll.txt";
+
+        try(FileWriter writer = new FileWriter(filePath)){
+            writer.write("test");
+        }
+        catch(FileNotFoundException e){
+            System.out.println("Cannot locate file.");
+        }
+        catch(IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+
+
 }
