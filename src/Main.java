@@ -2,6 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.text.NumberFormat;
 
 public class Main {
 
@@ -61,7 +62,7 @@ public class Main {
     public static void getEmployeeID() {
         while(true){
             try{
-                System.out.print("Enter employee ID: ");
+                System.out.print("Enter Employee ID: ");
                 employeeID = validateEmployeeID(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -73,7 +74,7 @@ public class Main {
     public static void getFirstName() {
         while(true){
             try{
-                System.out.print("Enter first name: ");
+                System.out.print("Enter First Name: ");
                 firstName = validateName(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -85,7 +86,7 @@ public class Main {
     public static void getLastName() {
         while(true){
             try{
-                System.out.print("Enter last name: ");
+                System.out.print("Enter Last Name: ");
                 lastName = validateName(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -97,7 +98,7 @@ public class Main {
     public static void getHoursWorked(){
         while(true){
             try{
-                System.out.print("Enter number of hours worked: ");
+                System.out.print("Enter Number of Hours Worked: ");
                 hoursWorked = validateHours(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -109,7 +110,7 @@ public class Main {
     public static void getPayRate() {
         while(true){
             try{
-                System.out.print("Enter rate of pay: $");
+                System.out.print("Enter Rate of Pay: $");
                 payRate = validatePay(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -121,7 +122,7 @@ public class Main {
     public static void getTaxRate(){
         while(true){
             try{
-                System.out.print("Enter rate of tax \n (0.1 = 10%, 0.2 = 20%, etc.): ");
+                System.out.print("Enter Rate of Tax \n (0.1 = 10%, 0.2 = 20%, etc.): ");
                 taxRate = validateTax(scanner.nextLine());
                 break;
             } catch (IllegalArgumentException e) {
@@ -172,7 +173,7 @@ public class Main {
         //Check pay not 0
         double pay = Double.parseDouble(input);
         if(pay <=0){
-            throw new IllegalArgumentException("Enter valid pay rate.");
+            throw new IllegalArgumentException("Pay rate cannot be 0.");
         }
         return pay;
     }
@@ -240,29 +241,48 @@ public class Main {
     ===================*/
 
     public static void displayPayOnScreen(){
-       System.out.println("===============================");
-       System.out.println("Employee Payslip");
-       System.out.println("===============================");
-       System.out.println("Employee ID: " + employeeID);
-       System.out.println("Name:  " + getFullName(firstName, lastName));
-       System.out.println("Hours Worked:  " + hoursWorked);
-       System.out.println("Hourly Rate: $" + payRate);
-       System.out.println("Gross Pay: $" + grossPay);
-       System.out.println("Tax Rate: " + getTaxPercentage(taxRate));
-       System.out.println("Tax Paid:: $" + grossPay);
-       System.out.println("Bonus: $" + bonusPay);
-       System.out.println("Net Pay: $" + netPay);
-       System.out.println("===============================");
+
+        System.out.println(formatPayslip());
+        System.out.println("=======================================");
+        System.out.println("Thank you for using the Payroll System");
+        System.out.println("=======================================");
+
    }
 
-    public static String getFullName(String fName, String lName){
-       return fName + " " + lName;
-    }
 
-    public static String getTaxPercentage(double rate){
-        return String.format("%.0f%%", rate * 100);
-    }
+    public static String formatPayslip(){
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(0);
 
+        return String.format(
+                """
+                        =========================
+                        Employee Payslip
+                        =========================
+                        Employee ID: %s
+                        Name: %s %s
+                        Hours Worked: %d
+                        Hourly Rate: %s
+                        Gross Pay: %s
+                        Tax Rate: %s
+                        Tax Paid: %s
+                        Bonus: %s
+                        Net Pay: %s
+                        =========================
+                        """,
+                employeeID,
+                firstName,
+                lastName,
+                hoursWorked,
+                currency.format(payRate),
+                currency.format(grossPay),
+                percent.format(taxRate),
+                currency.format(taxPaid),
+                currency.format(bonusPay),
+                currency.format(netPay)
+        );
+    }
     /*==================
     CREATE PAYSLIP FILE
     ===================*/
@@ -271,7 +291,7 @@ public class Main {
         String filePath = "C:\\temp\\payroll.txt";
 
         try(FileWriter writer = new FileWriter(filePath)){
-            writer.write("test");
+            writer.write(formatPayslip());
         }
         catch(FileNotFoundException e){
             System.out.println("Cannot locate file.");
