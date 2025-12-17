@@ -73,6 +73,8 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -85,6 +87,8 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -97,7 +101,10 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
+
         }
     }
 
@@ -109,6 +116,8 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -121,6 +130,8 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -133,6 +144,8 @@ public class Main {
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -242,6 +255,7 @@ public class Main {
 
     public static void displayPayOnScreen() {
 
+        System.out.println("\n");
         System.out.println(formatPayslip());
         System.out.println("=======================================");
         System.out.println("Thank you for using the Payroll System");
@@ -298,8 +312,10 @@ public class Main {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(formatPayslip());
         } catch (FileNotFoundException e) {
-            System.out.println("Cannot locate file.");
+            System.out.println("Cannot locate file " + filePath);
         } catch (IOException e) {
+            System.out.println("I/O error: " + e.getMessage());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
